@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const matter = require('gray-matter');
 
 const ROOT_DIR = '.';
 const OUTPUT_FILE = 'manifest.json';
@@ -14,13 +15,12 @@ function formatBytes(bytes, decimals = 2) {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
 }
 
-function scanDirectory(dir, fileList = {}) {
+function scanFiles(dir, manifest) {
     let files;
     try {
         files = fs.readdirSync(dir);
     } catch (e) {
-        console.warn(`Could not read directory: ${dir}`);
-        return fileList;
+        return;
     }
 
     files.forEach(file => {
@@ -34,34 +34,56 @@ function scanDirectory(dir, fileList = {}) {
 
         if (stat.isDirectory()) {
             if (!IGNORE_DIRS.includes(file)) {
-                scanDirectory(filePath, fileList);
+                scanFiles(filePath, manifest);
             }
         } else {
-            if (file.toLowerCase().endsWith('.pdf')) {
-                // Key is the directory path relative to root, normalized to forward slashes
-                // e.g., "ISITD/S5/Technologies_de_donnees_massives/elt1"
-                const relativeDir = path.relative(ROOT_DIR, dir).replace(/\\/g, '/');
-                
-                if (!fileList[relativeDir]) {
-                    fileList[relativeDir] = [];
-                }
+            const ext = path.extname(file).toLowerCase();
+            // Correctly escape the backslash for the regex: /\/g matches a single backslash
+            const relativeDir = path.relative(ROOT_DIR, dir).replace(/\\/g, '/');
+            const relativePath = path.relative(ROOT_DIR, filePath).replace(/\\/g, '/');
 
-                fileList[relativeDir].push({
+            if (ext === '.pdf') {
+                if (!manifest.documents[relativeDir]) manifest.documents[relativeDir] = [];
+                manifest.documents[relativeDir].push({
                     name: file,
-                    path: path.relative(ROOT_DIR, filePath).replace(/\\/g, '/'),
+                    path: relativePath,
                     size: stat.size,
                     sizeFormatted: formatBytes(stat.size),
                     lastModified: stat.mtime
                 });
+            } else if (ext === '.md' && dir.includes('blog')) {
+                try {
+                    const content = fs.readFileSync(filePath, 'utf8');
+                    const { data } = matter(content);
+                    manifest.blog.push({
+                        slug: path.basename(file, '.md'),
+                        path: relativePath,
+                        title: data.title || file,
+                        date: data.date || stat.mtime,
+                        author: data.author || 'Anonyme',
+                        category: data.category || 'Général',
+                        description: data.description || '',
+                        image: data.image || '',
+                        lastModified: stat.mtime
+                    });
+                } catch (err) {
+                    console.error(`Error parsing markdown ${file}:`, err);
+                }
             }
         }
     });
-
-    return fileList;
 }
 
-console.log('Generating manifest...');
-const manifest = scanDirectory(ROOT_DIR);
+console.log('Generating combined manifest...');
+const manifest = {
+    documents: {},
+    blog: []
+};
+
+scanFiles(ROOT_DIR, manifest);
+
+// Sort blog posts by date (newest first)
+manifest.blog.sort((a, b) => new Date(b.date) - new Date(a.date));
+
 fs.writeFileSync(OUTPUT_FILE, JSON.stringify(manifest, null, 2));
-console.log(`Manifest generated successfully at ${OUTPUT_FILE}`);
-console.log(`Found files in ${Object.keys(manifest).length} folders.`);
+console.log(`Manifest created! Indexed ${Object.keys(manifest.documents).length} folders and ${manifest.blog.length} blog posts.`);
