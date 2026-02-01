@@ -43,14 +43,30 @@ function scanFiles(dir, manifest) {
             const relativePath = path.relative(ROOT_DIR, filePath).replace(/\\/g, '/');
 
             if (ext === '.pdf') {
-                if (!manifest.documents[relativeDir]) manifest.documents[relativeDir] = [];
-                manifest.documents[relativeDir].push({
-                    name: file,
-                    path: relativePath,
-                    size: stat.size,
-                    sizeFormatted: formatBytes(stat.size),
-                    lastModified: stat.mtime
-                });
+                if (dir.includes('stages')) {
+                    // Extract year from path (e.g., stages/1CS -> 1CS)
+                    const pathParts = relativeDir.split('/');
+                    const year = pathParts[pathParts.length - 1]; // Assumes last part is 1CS/2CS/3CS
+                    
+                    manifest.internships.push({
+                        name: file,
+                        title: file.replace('.pdf', '').replace(/_/g, ' '),
+                        path: relativePath,
+                        size: stat.size,
+                        sizeFormatted: formatBytes(stat.size),
+                        year: year,
+                        lastModified: stat.mtime
+                    });
+                } else {
+                    if (!manifest.documents[relativeDir]) manifest.documents[relativeDir] = [];
+                    manifest.documents[relativeDir].push({
+                        name: file,
+                        path: relativePath,
+                        size: stat.size,
+                        sizeFormatted: formatBytes(stat.size),
+                        lastModified: stat.mtime
+                    });
+                }
             } else if (ext === '.md' && dir.includes('blog')) {
                 try {
                     const content = fs.readFileSync(filePath, 'utf8');
@@ -77,7 +93,8 @@ function scanFiles(dir, manifest) {
 console.log('Generating combined manifest...');
 const manifest = {
     documents: {},
-    blog: []
+    blog: [],
+    internships: []
 };
 
 scanFiles(ROOT_DIR, manifest);
@@ -86,4 +103,4 @@ scanFiles(ROOT_DIR, manifest);
 manifest.blog.sort((a, b) => new Date(b.date) - new Date(a.date));
 
 fs.writeFileSync(OUTPUT_FILE, JSON.stringify(manifest, null, 2));
-console.log(`Manifest created! Indexed ${Object.keys(manifest.documents).length} folders and ${manifest.blog.length} blog posts.`);
+console.log(`Manifest created! Indexed ${Object.keys(manifest.documents).length} folders, ${manifest.blog.length} blog posts, and ${manifest.internships.length} internships.`);

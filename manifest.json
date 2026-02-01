@@ -278,7 +278,7 @@
       "category": "Administration",
       "description": "Ne perdez plus de temps ! Découvrez comment demander vos certificats, bulletins et conventions directement en ligne.",
       "image": "https://images.unsplash.com/photo-1554224155-6726b3ff858f?q=80&w=1000",
-      "lastModified": "2026-02-01T01:24:15.061Z"
+      "lastModified": "2026-02-01T01:30:55.078Z"
     },
     {
       "slug": "guide-survie-1cs",
@@ -290,6 +290,17 @@
       "description": "Découvrez les meilleures astuces pour valider vos modules du S1 et gérer votre temps efficacement.",
       "image": "https://images.unsplash.com/photo-1513258496099-48168024adb0?q=80&w=1000",
       "lastModified": "2026-02-01T00:35:32.904Z"
+    }
+  ],
+  "internships": [
+    {
+      "name": "GREEN_DATA_CENTER_GUIDE_rapport.pdf",
+      "title": "GREEN DATA CENTER GUIDE rapport",
+      "path": "stages/1CS/GREEN_DATA_CENTER_GUIDE_rapport.pdf",
+      "size": 2159368,
+      "sizeFormatted": "2.06 MB",
+      "year": "1CS",
+      "lastModified": "2026-02-01T19:16:40.629Z"
     }
   ]
 }
