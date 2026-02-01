@@ -270,6 +270,17 @@
   },
   "blog": [
     {
+      "slug": "guide-administration",
+      "path": "blog/guide-administration.md",
+      "title": "Guide: Comment gérer vos documents administratifs en ligne ?",
+      "date": "2026-02-01",
+      "author": "Administration ESI",
+      "category": "Administration",
+      "description": "Ne perdez plus de temps ! Découvrez comment demander vos certificats, bulletins et conventions directement en ligne.",
+      "image": "https://images.unsplash.com/photo-1554224155-6726b3ff858f?q=80&w=1000",
+      "lastModified": "2026-02-01T01:24:15.061Z"
+    },
+    {
       "slug": "guide-survie-1cs",
       "path": "blog/guide-survie-1cs.md",
       "title": "Guide de Survie: Réussir sa 1CS à l'ESI",
