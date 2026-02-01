@@ -1,0 +1,41 @@
+name: Auto-Update Manifest
+
+on:
+  push:
+    # Trigger whenever files are changed in these folders
+    paths:
+      - 'stages/**'
+      - 'ICSDS/**'
+      - 'IIND/**'
+      - 'ISITD/**'
+      - 'ISSIC/**'
+      - 'blog/**'
+      - 'generate_manifest.js'
+
+jobs:
+  update-manifest:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Needed to push the update back to the repo
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install Dependencies
+        run: npm install gray-matter
+
+      - name: Run Manifest Generator
+        run: node generate_manifest.js
+
+      - name: Commit and Push
+        run: |
+          git config --global user.name 'ESI Bot'
+          git config --global user.email 'bot@esi-platform.com'
+          git add manifest.json
+          git diff --quiet && git diff --staged --quiet || (git commit -m "chore: auto-update manifest.json [skip ci]" && git push)
