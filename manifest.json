@@ -312,6 +312,15 @@
       "lastModified": "2026-02-02T18:54:15.897Z"
     },
     {
+      "name": "Rapport_de_stage_d'ouvrier_EL BOUANANI _Mouad_ISITD.pdf",
+      "title": "Rapport de stage d'ouvrier EL BOUANANI  Mouad ISITD",
+      "path": "stages/1CS/Rapport_de_stage_d'ouvrier_EL BOUANANI _Mouad_ISITD.pdf",
+      "size": 1906588,
+      "sizeFormatted": "1.82 MB",
+      "year": "1CS",
+      "lastModified": "2026-02-09T22:01:50.798Z"
+    },
+    {
       "name": "Rapport du stage PFA - Nouhaila Lachgar.pdf",
       "title": "Rapport du stage PFA - Nouhaila Lachgar",
       "path": "stages/2CS/Rapport du stage PFA - Nouhaila Lachgar.pdf",
@@ -319,6 +328,15 @@
       "sizeFormatted": "3.35 MB",
       "year": "2CS",
       "lastModified": "2026-02-02T18:51:39.538Z"
+    },
+    {
+      "name": "rapport_de_stage_ocp_ESI.pdf",
+      "title": "rapport de stage ocp ESI",
+      "path": "stages/2CS/rapport_de_stage_ocp_ESI.pdf",
+      "size": 3586581,
+      "sizeFormatted": "3.42 MB",
+      "year": "2CS",
+      "lastModified": "2026-02-09T22:01:59.092Z"
     }
   ]
 }
